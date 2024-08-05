@@ -43,12 +43,21 @@ class Post(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='comments')
+        User,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name='comments')
+        Post,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
     text = models.TextField()
     created = models.DateTimeField(
-        'Дата добавления', auto_now_add=True, db_index=True)
+        'Дата добавления'
+        , auto_now_add=True
+        , db_index=True
+    )
 
     def __str__(self):
         return self.text
@@ -56,6 +65,12 @@ class Comment(models.Model):
 
 class Follow(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='+')
+        User,
+        on_delete=models.CASCADE,
+        related_name='streamer'
+    )
     following = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='followers')
+        User,
+        on_delete=models.CASCADE,
+        related_name='followers'
+    )

@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import generics, viewsets
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 
 from posts.models import Group, Post, Follow
@@ -12,12 +12,12 @@ from .permissions import IsAuthor, ReadOnly, IsAuthorOrReadOnlyPermission
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    pagination_class = CustomPagination
 
     def get_permissions(self):
         if self.action == 'retrieve':
             return (ReadOnly(),)
-        return (IsAuthorOrReadOnlyPermission(),)
+        return (IsAuthor(),)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -25,7 +25,11 @@ class PostViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def get_permissions(self):
+        if self.action == 'retrieve':
+            return (ReadOnly(),)
+        return (IsAuthor(),)
 
     def get_post(self):
         return get_object_or_404(Post, id=self.kwargs['post_id'])
