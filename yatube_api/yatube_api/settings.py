@@ -1,7 +1,5 @@
 from pathlib import Path
 
-from datetime import timedelta
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'hhz7l-ltdismtf@bzyz+rple7*s*w$jak%whj@(@u0eok^f9k4'
@@ -98,8 +96,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'api.pagination.CustomPagination',
-    'PAGE_SIZE': 20
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
