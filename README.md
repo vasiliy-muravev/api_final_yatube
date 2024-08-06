@@ -1,7 +1,11 @@
-# Yatube API
+# Yatube API Final
 
-Yatube API предоставляет интерфейс для взаимодействия с моделями постов, комментариев и групп Yatube. Этот проект реализован с использованием Django и Django REST Framework. 
+Финальная версия проекта Yatube API предоставляет интерфейс для взаимодействия с моделями постов, комментариев, групп и подписчиков Yatube. Этот проект реализован с использованием Django и Django REST Framework. 
 
+### Цепочка проектов Blogicum
+[api_yatube](https://github.com/vasiliy-muravev/api_yatube "api_yatube")
+
+**[api_final_yatube](https://github.com/vasiliy-muravev/api_final_yatube "api_final_yatube")** &#8592; вы тут
 
 ### Фреймворки и библиотеки
 
@@ -10,11 +14,34 @@ Yatube API предоставляет интерфейс для взаимоде
 
 ### Аутентификация
 
-* **Django Rest Framework Token Authentication** : DRF Token Authentication предоставляет простой способ аутентификации пользователей с использованием токенов. Он позволяет клиентам аутентифицироваться, отправляя токен с каждым запросом, что облегчает работу с API.
+* **Django Rest Framework JWT Authentication**: В отличие от встроенной схемы TokenAuthentication, аутентификация JWT не требует использования базы данных для проверки токена. Пакет для аутентификации JWT — djangorestframework-simplejwt, который предоставляет некоторые функции, а также подключаемое приложение черного списка токенов.
+
+### Инструкция по запуску проекта (Linux)
+**1. Клонирование с Github.**
+
+В локальную директорию клонируйте проект
+```
+git clone git@github.com:vasiliy-muravev/api_final_yatube.git
+```
+**2. Создание окружения.**
+
+В корневой папке проекта создайте и активируйте виртуальное окружение
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
+**3. Обновление pip и установка зависимостей.**
+ 
+Находясь в корневой папке проекта, выполните команду
+```
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
 
 ### Эндпоинты
 
-* `POST /api/v1/api-token-auth/`: Получить токен аутентификации. Отправьте свои `username` и `password`.
+* `POST /api/v1/jwt/create/`: Получить токен аутентификации. Отправьте свои `username` и `password`.
 * `GET /api/v1/posts/`: Получить список всех постов.
 * `POST /api/v1/posts/`: Создать новый пост.
 * `GET /api/v1/posts/{post_id}/`: Получить подробную информацию о посте.
@@ -29,6 +56,8 @@ Yatube API предоставляет интерфейс для взаимоде
 * `PUT /api/v1/posts/{post_id}/comments/{comment_id}/`: Полностью обновить комментарий.
 * `PATCH /api/v1/posts/{post_id}/comments/{comment_id}/`: Частично обновить комментарий.
 * `DELETE /api/v1/posts/{post_id}/comments/{comment_id}/`: Удалить комментарий.
+* `GET /api/v1/follow/`: Получить подписчиков текущего пользователя.
+* `POST /api/v1/follow/`: Подписаться на пользователя.
 
 ### Как работать с коллекцией?
 Прежде чем начать работу с коллекцией — подготовьте Django-проект:
