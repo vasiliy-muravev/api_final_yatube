@@ -1,12 +1,9 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, filters, mixins
-from rest_framework.permissions import (
-    IsAuthenticated,
-    IsAuthenticatedOrReadOnly
-)
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import IsAuthenticated
 
-from .permissions import IsAuthor, ReadOnly
+from .permissions import YatubePermission
 from posts.models import Group, Post
 from .serializers import (
     CommentSerializer,
@@ -20,13 +17,7 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     pagination_class = LimitOffsetPagination
-
-    def get_permissions(self):
-        if self.action == 'retrieve':
-            return (ReadOnly(),)
-        if self.action == 'create':
-            return (IsAuthenticated(),)
-        return (IsAuthor(),)
+    permission_classes = (YatubePermission,)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -34,13 +25,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-
-    def get_permissions(self):
-        if self.action == 'retrieve':
-            return (ReadOnly(),)
-        if self.action == 'create':
-            return (IsAuthenticated(),)
-        return (IsAuthor(),)
+    permission_classes = (YatubePermission,)
 
     def get_post(self):
         return get_object_or_404(Post, id=self.kwargs['post_id'])
@@ -57,7 +42,6 @@ class CommentViewSet(viewsets.ModelViewSet):
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
 class FollowViewSet(
@@ -68,7 +52,7 @@ class FollowViewSet(
     serializer_class = FollowSerializer
     permission_classes = (IsAuthenticated,)
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('following__username',)
+    search_fields = ('following__username', 'user__username')
 
     def get_queryset(self):
         return self.request.user.watcher.all()
