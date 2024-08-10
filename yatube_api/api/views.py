@@ -3,7 +3,7 @@ from rest_framework import viewsets, filters, mixins
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 
-from .permissions import YatubePermission
+from .permissions import IsAuthorOrAuthenticatedOrReadOnly
 from posts.models import Group, Post
 from .serializers import (
     CommentSerializer,
@@ -17,7 +17,7 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     pagination_class = LimitOffsetPagination
-    permission_classes = (YatubePermission,)
+    permission_classes = (IsAuthorOrAuthenticatedOrReadOnly,)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -25,7 +25,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = (YatubePermission,)
+    permission_classes = (IsAuthorOrAuthenticatedOrReadOnly,)
 
     def get_post(self):
         return get_object_or_404(Post, id=self.kwargs['post_id'])
